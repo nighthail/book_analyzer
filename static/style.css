@@ -1,0 +1,36 @@
+body {
+    margin: 0;
+    background-color: grey; /* Set background color as needed */
+    font-family: 'Baskervville', serif;font-size: 22px;
+}
+
+
+.container {
+    max-width: 900px;
+    margin: 0 auto; /* Center the container horizontally */
+    padding: 20px; /* Optional padding */
+    box-sizing: border-box; /* Include padding in total width */
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 1;
+    padding: 20px;
+    background-color: white; /* Set background color as needed */
+    color: black;
+    text-align: left;
+}
+
+/* Style for the first row that spans two columns */
+.row.span-two-columns {
+    flex-wrap: wrap;
+    background-color: white; /* Set background color as needed */
+        padding: 20px;
+}
+
+.row.span-two-columns > div {
+    flex: 1 0 100%; /* Each item takes full width */
+}
