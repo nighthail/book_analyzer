@@ -139,12 +139,12 @@ def process():
     book_list = get_books()
 
     if request.method == 'POST':
-        user_output = request.form['user_output']
+        chosen_book = request.form['chosen_book']
     else:
-        user_output = ''
+        chosen_book = 'text.txt'
 
     return render_template('index.html', book_summary=book_summary, unique_characters=unique_characters,
-                           book_list=book_list, user_output=user_output)
+                           book_list=book_list, chosen_book=chosen_book)
 
 
 

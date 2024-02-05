@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="row span-two-columns"><h1>Book Analyzer</h1></div>
+        <div class="row span-two-columns"><h1>Book Analyzer {{ chosen_book }}</h1></div>
         <div class="row">
             <div class="column"><h1>Summary</h1><br>
             Lorem </div>
@@ -23,23 +23,19 @@
             <div class="column"><h1>Buttons</h1> <br>
                 <div class="books" style="width:200px;">
                     <label class="book_menu">
-                    <select>
+                    <form action="/process" method="post">
+                    <select id="chosen_book" name="chosen_book" required>
                     {% for book in book_list %}
-                        <option value="{{ book }}">{{ book }}</option>
+                        <option value="{{ book }}" required>{{ book }}</option>
                     {% endfor %}
                     </select>
-                    <label>
-                                <form action="/process" method="post">
-                                    <input type="text" id="user_output" name="user_output" required>
-                                    <button type="submit">Submit</button>
-                                </form>
-                        </label>
-
+                    <button type="submit">Submit</button>
+                    </form>
+                    </label>
                 </div>
              </div>
             </div>
-    <h1>{{ user_output }}</h1>
-        </div>
+         </div>
     </div>
 
 </body>
