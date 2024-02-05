@@ -7,17 +7,21 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <link href='https://fonts.googleapis.com/css?family=Baskervville' rel='stylesheet'>
-    <title>Test</title>
+    <title>Book Analyzer</title>
 </head>
 <body>
     <div class="container">
         <div class="row span-two-columns"><h1>Book Analyzer {{ chosen_book }}</h1></div>
         <div class="row">
-            <div class="column"><h1>Summary</h1><br>
-            Lorem </div>
+        <div class="column"><h1>Summary</h1><br>
+            {{ book_summary }} </div>
             <div class="column"><h1>Characters</h1>
-            Lorm
-            </div>
+    <ul>
+        {% set amount = 0 %}
+        {% for person in unique_characters %}
+            <li>{{ person }}</li>
+        {% endfor %}
+    </ul>There seem to be {{ amount }} characters in this story</div>
         </div>
         <div class="row">
             <div class="column"><h1>Buttons</h1> <br>

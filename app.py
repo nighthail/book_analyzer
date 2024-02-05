@@ -1,6 +1,5 @@
 import difflib
 import os
-
 from flask import Flask, render_template, request, redirect
 import spacy
 from spacy.lang.en.stop_words import STOP_WORDS
@@ -10,18 +9,25 @@ from heapq import nlargest
 
 app = Flask(__name__)
 nlp = spacy.load("en_core_web_lg")
-book = open('books/alice.txt', encoding='utf-8')
-text = book.read()
-book.close()
-
-doc = nlp(text)
 
 # Global variables
 book_summary = None
 unique_characters = None
 
 
-def make_summary():
+def get_chosen_book(book_from_menu):
+    if book_from_menu is None:
+        book = open('books/Alice-In-Wonderland.txt', encoding='utf-8')
+    else:
+        book = open(f'books/{book_from_menu}', encoding='utf-8')
+    text = book.read()
+    book.close()
+
+    doc = nlp(text)
+    return doc
+
+
+def make_summary(doc):
     keyword = []
     stopword = list(STOP_WORDS)
     pos_tag = ['PROPN', 'ADJ', 'NOUN', 'VERB']
@@ -39,8 +45,6 @@ def make_summary():
         freq_word[word] = int(freq_word[word] / max_freq)
     freq_word.most_common(20)
 
-    # print(freq_word.most_common(20))
-
     # Weighing sentences
     sent_strength = {}
     for sent in doc.sents:
@@ -50,9 +54,8 @@ def make_summary():
                     sent_strength[sent] += freq_word[word.text]
                 else:
                     sent_strength[sent] = freq_word[word.text]
-            # print(sent_strength)
 
-            # Summarization
+    # Summarization
     summarized_sentences = nlargest(5, sent_strength, key=sent_strength.get)
 
     final_sentences = [w.text for w in summarized_sentences]
@@ -60,7 +63,7 @@ def make_summary():
     return summary
 
 
-def get_all_characters():
+def get_all_characters(doc):
     global unique_characters
     for entity in doc.ents:
         people = []
@@ -75,31 +78,29 @@ def get_all_characters():
                     s_word = ent.text.split("'s")
                     people.append(s_word[0].strip())
 
-    compound_people = []
-    for person in people:
-        if person.count(" ") >= 1:
-            compound_people.append(person)
-    # print(compound_people)
-    #
-    # unique_names = []
-    # n = 30
-    # cutoff = 0.9
-    # for to_compare in compound_people:
-    #     close_match = difflib.get_close_matches(to_compare, compound_people, n, cutoff)
-    #     unique_names.append(close_match)
-    # print(unique_names)
+    # compound_people = []
+    # for person in people:
+    #     if person.count(" ") >= 1:
+    #         compound_people.append(person)
 
-    # # Permutationer tas bort här:
-    # result = []
-    # for i in unique_names:
-    #     i.sort()
-    #     result.append(i)
-    #     output = []
-    #     for i in result:
-    #         if i not in output:
-    #             output.append(i)
-    # output = list(map(tuple, output))
-    return compound_people
+    unique_names = []
+    n = 30
+    cutoff = 0.9
+    for to_compare in people:
+        close_match = difflib.get_close_matches(to_compare, people, n, cutoff)
+        unique_names.append(close_match)
+
+    # Permutationer tas bort här:
+    result = []
+    for i in unique_names:
+        i.sort()
+        result.append(i)
+        output = []
+        for j in result:
+            if j not in output:
+                output.append(j)
+    output = list(map(tuple, output))
+    return output
 
 
 def get_books():
@@ -109,19 +110,18 @@ def get_books():
             book_list.append(book)
     return book_list
 
-
 @app.route('/')
 def index():
+    doc = get_chosen_book(None)
     # Läser in book_summary funktionen
     global book_summary
-    book_summary = make_summary()
+    book_summary = make_summary(doc)
 
     global unique_characters
-    unique_characters = get_all_characters()
+    unique_characters = get_all_characters(doc)
 
     global book_list
     book_list = get_books()
-
 
     return render_template('index.html', book_summary=book_summary, unique_characters=unique_characters,
                            book_list=book_list)
@@ -130,22 +130,17 @@ def index():
 @app.route('/process', methods=['POST'])
 def process():
     global book_summary
-    book_summary = make_summary()
-
     global unique_characters
-    unique_characters = get_all_characters()
-
-    global book_list
-    book_list = get_books()
-
     if request.method == 'POST':
         chosen_book = request.form['chosen_book']
+        doc = get_chosen_book(chosen_book)
+        book_summary = make_summary(doc)
+        unique_characters = get_all_characters(doc)
     else:
         chosen_book = 'text.txt'
 
     return render_template('index.html', book_summary=book_summary, unique_characters=unique_characters,
                            book_list=book_list, chosen_book=chosen_book)
-
 
 
 if __name__ == '__main__':
