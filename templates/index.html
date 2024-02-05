@@ -10,28 +10,35 @@
     <title>Test</title>
 </head>
 <body>
-
     <div class="container">
-        <!-- First row spanning two columns -->
         <div class="row span-two-columns"><h1>Book Analyzer</h1></div>
-
-        <!-- Second row with two columns side by side -->
         <div class="row">
             <div class="column"><h1>Summary</h1><br>
-            {{ book_summary }}</div>
+            Lorem </div>
             <div class="column"><h1>Characters</h1>
-             <ul>
-            {% for person in unique_characters %}
-                <li>{{ person }}</li>
-            {% endfor %}
-              </ul>
+            Lorm
             </div>
         </div>
-
-        <!-- Third row with two columns -->
         <div class="row">
-            <div class="column"><h1>Buttons</h1></div>
-            <div class="column"><h1>Alternative Titles</h1></div>
+            <div class="column"><h1>Buttons</h1> <br>
+                <div class="books" style="width:200px;">
+                    <label class="book_menu">
+                    <select>
+                    {% for book in book_list %}
+                        <option value="{{ book }}">{{ book }}</option>
+                    {% endfor %}
+                    </select>
+                    <label>
+                                <form action="/process" method="post">
+                                    <input type="text" id="user_output" name="user_output" required>
+                                    <button type="submit">Submit</button>
+                                </form>
+                        </label>
+
+                </div>
+             </div>
+            </div>
+    <h1>{{ user_output }}</h1>
         </div>
     </div>
 

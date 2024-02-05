@@ -1,6 +1,7 @@
 import difflib
+import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 import spacy
 from spacy.lang.en.stop_words import STOP_WORDS
 from string import punctuation
@@ -8,10 +9,8 @@ from collections import Counter
 from heapq import nlargest
 
 app = Flask(__name__)
-
 nlp = spacy.load("en_core_web_lg")
-
-book = open('jghg.txt', encoding='utf-8')
+book = open('books/alice.txt', encoding='utf-8')
 text = book.read()
 book.close()
 
@@ -81,26 +80,34 @@ def get_all_characters():
         if person.count(" ") >= 1:
             compound_people.append(person)
     # print(compound_people)
+    #
+    # unique_names = []
+    # n = 30
+    # cutoff = 0.9
+    # for to_compare in compound_people:
+    #     close_match = difflib.get_close_matches(to_compare, compound_people, n, cutoff)
+    #     unique_names.append(close_match)
+    # print(unique_names)
 
-    unique_names = []
-    n = 30
-    cutoff = 0.9
-    for to_compare in compound_people:
-        close_match = difflib.get_close_matches(to_compare, compound_people, n, cutoff)
-        unique_names.append(close_match)
-    print(unique_names)
+    # # Permutationer tas bort här:
+    # result = []
+    # for i in unique_names:
+    #     i.sort()
+    #     result.append(i)
+    #     output = []
+    #     for i in result:
+    #         if i not in output:
+    #             output.append(i)
+    # output = list(map(tuple, output))
+    return compound_people
 
-    # Permutationer tas bort här:
-    result = []
-    for i in unique_names:
-        i.sort()
-        result.append(i)
-        output = []
-        for i in result:
-            if i not in output:
-                output.append(i)
-    output = list(map(tuple, output))
-    return output
+
+def get_books():
+    book_list = []
+    for book in os.listdir("books"):
+        if book.endswith(".txt"):
+            book_list.append(book)
+    return book_list
 
 
 @app.route('/')
@@ -112,7 +119,33 @@ def index():
     global unique_characters
     unique_characters = get_all_characters()
 
-    return render_template('index.html', book_summary=book_summary, unique_characters=unique_characters)
+    global book_list
+    book_list = get_books()
+
+
+    return render_template('index.html', book_summary=book_summary, unique_characters=unique_characters,
+                           book_list=book_list)
+
+
+@app.route('/process', methods=['POST'])
+def process():
+    global book_summary
+    book_summary = make_summary()
+
+    global unique_characters
+    unique_characters = get_all_characters()
+
+    global book_list
+    book_list = get_books()
+
+    if request.method == 'POST':
+        user_output = request.form['user_output']
+    else:
+        user_output = ''
+
+    return render_template('index.html', book_summary=book_summary, unique_characters=unique_characters,
+                           book_list=book_list, user_output=user_output)
+
 
 
 if __name__ == '__main__':

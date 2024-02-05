@@ -7,7 +7,7 @@ import difflib
 
 nlp = spacy.load("en_core_web_lg")
 
-book = open('text.txt', encoding='utf-8')
+book = open('books/text.txt', encoding='utf-8')
 text = book.read()
 
 # book.close()
