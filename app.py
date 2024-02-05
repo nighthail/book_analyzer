@@ -136,11 +136,14 @@ def process():
         doc = get_chosen_book(chosen_book)
         book_summary = make_summary(doc)
         unique_characters = get_all_characters(doc)
+        book_title = chosen_book.replace('.txt', '')
+        book_title = book_title.replace('-', ' ')
     else:
         chosen_book = 'text.txt'
 
+
     return render_template('index.html', book_summary=book_summary, unique_characters=unique_characters,
-                           book_list=book_list, chosen_book=chosen_book)
+                           book_list=book_list, book_title=book_title)
 
 
 if __name__ == '__main__':

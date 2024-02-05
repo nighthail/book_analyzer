@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="row span-two-columns"><h1>Book Analyzer {{ chosen_book }}</h1></div>
+        <div class="row span-two-columns"><h1>Book Analyzer {{ book_title }}</h1></div>
         <div class="row">
         <div class="column"><h1>Summary</h1><br>
             {{ book_summary }} </div>
@@ -21,7 +21,7 @@
         {% for person in unique_characters %}
             <li>{{ person }}</li>
         {% endfor %}
-    </ul>There seem to be {{ amount }} characters in this story</div>
+    </ul></div>
         </div>
         <div class="row">
             <div class="column"><h1>Buttons</h1> <br>
