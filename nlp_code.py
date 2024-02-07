@@ -28,6 +28,12 @@ def get_chosen_book(book_from_menu):
     return doc
 
 
+def prepare_own_text(own_text):
+    #Här omvandlas den inmatade texten till ett NLP-dokument
+    doc = nlp(own_text)
+    return doc
+
+
 def get_books():
     # Detta är en funktion som läser in alla texter med .txt som filändelse, och appendar dem i en lista
     book_list = []
@@ -97,38 +103,38 @@ def make_summary(doc):
 
 
 def get_all_characters(doc):
-    #Denna funktion är menad att ta fram alla unika namn i texten
-    #Skapar en set för att spara namnen i
+    # Denna funktion är menad att ta fram alla unika namn i texten
+    # Skapar en set för att spara namnen i
     people = set()
-    #För varje entitet i texten:
+    # För varje entitet i texten:
     for ent in doc.ents:
-        #Om entiteten har labeln person, första bokstaven är stor, alla bokstäver INTE är stora, och namnet enbart innehåller
-        #bokstäver:
+        # Om entiteten har labeln person, första bokstaven är stor, alla bokstäver INTE är stora, och namnet enbart innehåller
+        # bokstäver:
         if ent.label_ == "PERSON" and ent.text[0].isupper() and ent.text[0].isalpha() and not ent.text.isupper():
-            #Städar upp namn som innehåller 's, och även inskrivna radbrytningar (hade en text som hade det problemet)
+            # Städar upp namn som innehåller 's, och även inskrivna radbrytningar (hade en text som hade det problemet)
             cleaned_name = ent.text.strip().replace("'s", "").replace("\n", "").replace("´s", "")
-            #Adderar namnen till settet
+            # Adderar namnen till settet
             people.add(cleaned_name)
 
-    #Skapar lista över unika namn
+    # Skapar lista över unika namn
     unique_names = []
-    #Max antal namn i varje item, drog till med ett högt nummer
+    # Max antal namn i varje item, drog till med ett högt nummer
     n = 30
-    #Så nära matchade namnen får vara, max 1.
+    # Så nära matchade namnen får vara, max 1.
     cutoff = 0.9
 
-    #Här jämförs namnen i settet för att se om samma eller liknande namn
-    #dyker upp flera ggr, så som Antony Smith vs Anthony Smith.
+    # Här jämförs namnen i settet för att se om samma eller liknande namn
+    # dyker upp flera ggr, så som Antony Smith vs Anthony Smith.
     for to_compare in people:
-        #Använder difflib bibliotekets get_close_matches för att jämföra ord.
+        # Använder difflib bibliotekets get_close_matches för att jämföra ord.
         close_match = difflib.get_close_matches(to_compare, people, n, cutoff)
-        #appendar varje unikt namn
+        # appendar varje unikt namn
         unique_names.append(close_match)
 
     # tar bort dubletter, så som (Smith, Smit) vs (Smit, Smith).
-    #Detta görs genom att först sortera namnen, omvandla dem till en tuple så ordningen av namn inte påverkar
-    #slutresultatet. Set-konverteringen gör så enbart unik data ska få skrivas in.
-    #omvandlingen till list är för att datan lättare ska kunna skrivas ut på hemsidan
+    # Detta görs genom att först sortera namnen, omvandla dem till en tuple så ordningen av namn inte påverkar
+    # slutresultatet. Set-konverteringen gör så enbart unik data ska få skrivas in.
+    # omvandlingen till list är för att datan lättare ska kunna skrivas ut på hemsidan
     unique_names = list(set(tuple(sorted(names)) for names in unique_names))
 
     return unique_names

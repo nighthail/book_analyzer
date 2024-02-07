@@ -38,15 +38,22 @@ def process():
     global unique_characters
     #Om en bok valts i listan och användaren klickat på submit:
     if request.method == 'POST':
-        #samma kod som körs under '/' med undantag att en bok nu valts
-        chosen_book = request.form['chosen_book']
-        doc = nlp_code.get_chosen_book(chosen_book)
-        book_summary = nlp_code.make_summary(doc)
-        unique_characters = nlp_code.get_all_characters(doc)
-        book_title = chosen_book.replace('.txt', '')
-        book_title = book_title.replace('-', ' ')
+        own_text = request.form['own_text']
+        if own_text == '':
+            # samma kod som körs under '/' med undantag att en bok nu valts
+            chosen_book = request.form['chosen_book']
+            doc = nlp_code.get_chosen_book(chosen_book)
+            book_summary = nlp_code.make_summary(doc)
+            unique_characters = nlp_code.get_all_characters(doc)
+            book_title = chosen_book.replace('.txt', '')
+            book_title = book_title.replace('-', ' ')
+        else:
+            doc = nlp_code.prepare_own_text(own_text)
+            book_summary = nlp_code.make_summary(doc)
+            unique_characters = nlp_code.get_all_characters(doc)
+            book_title = "Your text"
     else:
-        #Failsafe ifall ingen bok valts (på något sätt)
+        # Failsafe ifall ingen bok valts (på något sätt)
         chosen_book = 'Alice-in-Wonderland.txt'
         book_title = 'Alice in Wonderland'
 
