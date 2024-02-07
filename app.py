@@ -64,27 +64,33 @@ def process():
 def compare_page():
     text_1 = 'Enter your text below to analyze it'
     text_2 = 'Enter your text below to analyze it'
-    similarity = 'Similarity between the two texts displayed here'
+    similarity_string = 'Similarity between the two texts displayed here'
 
-    return render_template('compare.html', text_1=text_1, text_2=text_2, similarity=similarity)
+    return render_template('compare.html', text_1=text_1, text_2=text_2, similarity_string=similarity_string)
 @app.route('/compare_func', methods=['POST'])
 def compare():
-    global text_1, text_2
+    global text_1, text_2, similarity
+    #tar in två texter från två text areas
     compare_text_1 = request.form['compare_text_1']
     compare_text_2 = request.form['compare_text_2']
+    #kontrollerar att texterna går att analysera
     if compare_text_1 == compare_text_2 or compare_text_1 == '' or compare_text_2 == '':
         text_1 = 'Faulty data input'
         text_2 = 'Faulty data input'
     else:
+        #Om texterna fungerar skickas de vidare var för sig till funktionerna som
+        #förberered dem för att kunna summeras
         doc_1 = nlp_code.prepare_own_text(compare_text_1)
         doc_2 = nlp_code.prepare_own_text(compare_text_2)
         text_1 = nlp_code.make_summary(doc_1)
         text_2 = nlp_code.make_summary(doc_2)
-
+        #Med hjälp av spacys similarity kan vi få ut likheter mellan två texter
         similarity = doc_1.similarity(doc_2)
+        similarity = round(similarity, 2)
+        similarity = similarity * 100
+        similarity_string = 'The texts are ' + str(similarity) + '% similar using spaCY similarity'
 
-
-    return render_template('compare.html', text_1=text_1, text_2=text_2, similarity=similarity)
+    return render_template('compare.html', text_1=text_1, text_2=text_2, similarity_string=similarity_string)
 
 
 if __name__ == '__main__':
