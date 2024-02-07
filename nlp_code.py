@@ -83,7 +83,7 @@ def make_summary(doc):
             # Kontrollerar om ordet finns med i den normaliserade frekvens-dicitonaryn
             # läggs ordets styrka till vid ordet.
             if word.text in freq_word.keys():
-                # Placeholder, här görs inget urskilljande
+                #om ordet finns i sent_strength läggs frekvensen till, annars läggs ordet till
                 if word in sent_strength.keys():
                     sent_strength[sent] += freq_word[word.text]
                 else:

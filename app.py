@@ -69,7 +69,7 @@ def compare_page():
     return render_template('compare.html', text_1=text_1, text_2=text_2, similarity_string=similarity_string)
 @app.route('/compare_func', methods=['POST'])
 def compare():
-    global text_1, text_2, similarity
+    global text_1, text_2, similarity, similarity_string
     #tar in två texter från två text areas
     compare_text_1 = request.form['compare_text_1']
     compare_text_2 = request.form['compare_text_2']
@@ -77,6 +77,7 @@ def compare():
     if compare_text_1 == compare_text_2 or compare_text_1 == '' or compare_text_2 == '':
         text_1 = 'Faulty data input'
         text_2 = 'Faulty data input'
+        similarity_string = ''
     else:
         #Om texterna fungerar skickas de vidare var för sig till funktionerna som
         #förberered dem för att kunna summeras
