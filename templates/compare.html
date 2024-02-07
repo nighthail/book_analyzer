@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link href='https://fonts.googleapis.com/css?family=Baskervville' rel='stylesheet'>
+    <title>Compare two texts</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row span-two-columns"><h1>Book Comparer</h1></div>
+        <div class="row">
+        <div class="column"><h1>Text 1</h1>
+            {{ text_1 }}
+ </div>
+            <div class="column"><h1>Text 2</h1>
+                {{ text_2 }}
+</div>
+            <div class="column"><h1>Similarities</h1>
+                {{ similarity }}
+</div>
+
+        </div>
+        <div class="row">
+            <div class="column"><h1>Enter your texts:</h1>
+                <div class="books">
+                    <form action="/compare_func" method="post">
+                        <label for="compare_text_1">Enter first text:</label><br>
+                        <textarea id="compare_text_1" name="compare_text_1" rows="10" cols="50">
+                    </textarea>
+                        <br>
+                        <label for="compare_text_2">Enter second text:</label><br>
+                        <textarea id="compare_text_2" name="compare_text_2" rows="10" cols="50">
+                    </textarea>
+                    <button type="submit">Compare</button>
+                    </form>
+
+                </div>
+             </div>
+            </div>
+         </div>
+
+</body>
+</html>

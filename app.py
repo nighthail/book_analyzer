@@ -60,5 +60,32 @@ def process():
     return render_template('index.html', book_summary=book_summary, unique_characters=unique_characters,
                            book_list=book_list, book_title=book_title)
 
+@app.route('/compare_page')
+def compare_page():
+    text_1 = 'Enter your text below to analyze it'
+    text_2 = 'Enter your text below to analyze it'
+    similarity = 'Similarity between the two texts displayed here'
+
+    return render_template('compare.html', text_1=text_1, text_2=text_2, similarity=similarity)
+@app.route('/compare_func', methods=['POST'])
+def compare():
+    global text_1, text_2
+    compare_text_1 = request.form['compare_text_1']
+    compare_text_2 = request.form['compare_text_2']
+    if compare_text_1 == compare_text_2 or compare_text_1 == '' or compare_text_2 == '':
+        text_1 = 'Faulty data input'
+        text_2 = 'Faulty data input'
+    else:
+        doc_1 = nlp_code.prepare_own_text(compare_text_1)
+        doc_2 = nlp_code.prepare_own_text(compare_text_2)
+        text_1 = nlp_code.make_summary(doc_1)
+        text_2 = nlp_code.make_summary(doc_2)
+
+        similarity = doc_1.similarity(doc_2)
+
+
+    return render_template('compare.html', text_1=text_1, text_2=text_2, similarity=similarity)
+
+
 if __name__ == '__main__':
     app.run(debug=True)

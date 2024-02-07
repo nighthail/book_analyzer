@@ -138,3 +138,4 @@ def get_all_characters(doc):
     unique_names = list(set(tuple(sorted(names)) for names in unique_names))
 
     return unique_names
+
