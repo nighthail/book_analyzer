@@ -28,3 +28,5 @@ Non-character words pop up under characters. This is due to a nlp label problem 
 Similarities between texts only go after word-for-word similarities and not sentiment or an understanding of texts.
 
 spaCy calculations are slow in flask unless the text is very short
+
+Unstylish presentation in css/html
