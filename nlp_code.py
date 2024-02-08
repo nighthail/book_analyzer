@@ -68,7 +68,7 @@ def make_summary(doc):
     # (1) frågar efter det absolut vanligaste elementet. [0] indikerar det första ordet i tuple, [1] är frekvensen
     max_freq = Counter(keyword).most_common(1)[0][1]
     for word in freq_word.keys():
-        # "Normaliserar" fekvensen genom att dela varje ords frekvens med det maximala antalet frekvenser,
+        # "Normaliserar" frekvensen genom att dela varje ords frekvens med det maximala antalet frekvenser,
         # konverterar sedan till int
         freq_word[word] = int(freq_word[word] / max_freq)
     # Använder most_common() funktionen från collections så värdet går att ordna
@@ -80,7 +80,7 @@ def make_summary(doc):
     #
     for sent in doc.sents:
         for word in sent:
-            # Kontrollerar om ordet finns med i den normaliserade frekvens-dicitonaryn
+            # Kontrollerar om ordet finns med i den normaliserade frekvens-dicitonary:n
             # läggs ordets styrka till vid ordet.
             if word.text in freq_word.keys():
                 #om ordet finns i sent_strength läggs frekvensen till, annars läggs ordet till
@@ -108,7 +108,8 @@ def get_all_characters(doc):
     people = set()
     # För varje entitet i texten:
     for ent in doc.ents:
-        # Om entiteten har labeln person, första bokstaven är stor, alla bokstäver INTE är stora, och namnet enbart innehåller
+        # Om entiteten har labeln person, första bokstaven är stor,
+        # alla bokstäver INTE är stora, och namnet enbart innehåller
         # bokstäver:
         if ent.label_ == "PERSON" and ent.text[0].isupper() and ent.text[0].isalpha() and not ent.text.isupper():
             # Städar upp namn som innehåller 's, och även inskrivna radbrytningar (hade en text som hade det problemet)
@@ -131,11 +132,10 @@ def get_all_characters(doc):
         # appendar varje unikt namn
         unique_names.append(close_match)
 
-    # tar bort dubletter, så som (Smith, Smit) vs (Smit, Smith).
+    # Tar bort dubletter, så som (Smith, Smit) vs (Smit, Smith).
     # Detta görs genom att först sortera namnen, omvandla dem till en tuple så ordningen av namn inte påverkar
     # slutresultatet. Set-konverteringen gör så enbart unik data ska få skrivas in.
     # omvandlingen till list är för att datan lättare ska kunna skrivas ut på hemsidan
     unique_names = list(set(tuple(sorted(names)) for names in unique_names))
 
     return unique_names
-
