@@ -8,12 +8,13 @@ All texts used are of Public Domain.
 
 #how to use
 
-Clone repository, download all requirements and run the flask application.
+Clone repository, install dependencies and run the flask application.
+By default, the text from Alice-In-Wonderland.txt will be processed and displayed.
 On index-page, scroll down to see the menu. From the drop down menu you can pick a text from the /books folder. 
 If you add a txt file to this folder and restart the application, your text will pop up as a choice on said menu.
 Click submit after picking a text. The resulting processed text will be a summary of your text, and a list of (cast) characters.
 
-if you rather enter your own text you do that in the text area. After entering your text, click submit and the same process will happen
+If you rather enter your own text you do that in the text area. After entering your text, click submit and the same process will happen
 for your entered text.
 
 If you rather compare two texts, click "Compare two texts" link at the bottom of the page. You are taken to the compare-page
